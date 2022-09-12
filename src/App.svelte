@@ -2,9 +2,9 @@
   import { animationFrames } from 'rxjs'
 
   import { onMount } from 'svelte'
-  import { Renderer } from 'pixi.js'
   import { stage } from './canvas/particles'
   import { randomInt } from './helpers/random'
+  import { renderer } from './canvas/render'
 
   animationFrames().subscribe(() => {
     for (const p of stage.children) {
@@ -18,18 +18,10 @@
   let view: HTMLCanvasElement
 
   onMount(() => {
-    const renderer = new Renderer({
-      view,
-      width: window.innerWidth,
-      height: window.innerHeight,
-      backgroundColor: 0x111111,
-      powerPreference: 'high-performance',
-      useContextAlpha: false,
-      antialias: false,
-    })
+    const { render } = renderer(view)
 
     animationFrames().subscribe(() => {
-      renderer.render(stage)
+      render(stage)
     })
   })
 </script>
