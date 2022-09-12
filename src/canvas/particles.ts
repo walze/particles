@@ -15,7 +15,7 @@ ctx.fillRect(0, 0, 1, 1)
 
 const WhiteTexture = Texture.from(canvas)
 const [width, height] = aspect
-const n = width * width
+const n = (width * width) / 2
 console.info('Rendering', n, 'particles')
 
 export const makeParticle = () => {

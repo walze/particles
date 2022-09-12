@@ -11,11 +11,11 @@
 
   const unsub = useObservable(animationFrames()).subscribe(
     () => {
-      for (const p of stage.children)
-        p.setTransform(
-          p.x + randomInt(-1, 1),
-          p.y + randomInt(-1, 1),
-        )
+      for (const p of stage.children) {
+        const mx = randomInt(-1, 1)
+        const my = randomInt(-1, 1)
+        p.setTransform(p.x + mx, p.y + my)
+      }
 
       const { render } = renderer(view)
 
