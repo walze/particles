@@ -15,7 +15,7 @@ ctx.fillRect(0, 0, 1, 1)
 
 const WhiteTexture = Texture.from(canvas)
 const [width, height] = aspect
-const n = (width * width) / 2
+const n = (width * width) / 4
 console.info('Rendering', n, 'particles')
 
 export const makeParticle = () => {
@@ -26,11 +26,11 @@ export const makeParticle = () => {
   return p
 }
 
-export const particles = Array(n)
+export const particles = new Array(n)
   .fill(undefined)
   .map(makeParticle)
 
 export const stage = new ParticleContainer(n)
-splitEvery(n / 10, particles).forEach((batch) => {
-  stage.addChild(...batch)
-})
+for (const p of splitEvery(n / 100, particles)) {
+  stage.addChild(...p)
+}
