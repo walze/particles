@@ -33,10 +33,14 @@ const gravity = (b1: [number, number], b2: [number, number]) => {
 
   const g = G * (mass / d ** 2)
 
+  const isClose = d <= 100
+
   const ax = g * dx
   const ay = g * dy
 
-  return [ax, ay] as [number, number]
+  const calc = (x: number) => (isClose ? x * -5 : x)
+
+  return [calc(ax), calc(ay)] as [number, number]
 }
 
 export const update = (p: Particle) => {
