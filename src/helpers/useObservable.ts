@@ -1,12 +1,19 @@
 import { Observable } from 'rxjs'
-import { onDestroy } from 'svelte'
 import { writable } from 'svelte/store'
 
-export const useObservable = <T>(o: Observable<T>) => {
+export const useObservable = <T>(
+  o: Observable<T>,
+  f: (v: T | null) => (() => void) | void,
+) => {
   const wt = writable<T | null>(null)
   const s = o.subscribe(wt.set)
+  let cleanup: (() => void) | void
 
-  onDestroy(() => s.unsubscribe())
+  const unsub = wt.subscribe((v) => (cleanup = f(v)))
 
-  return wt
+  return () => {
+    unsub()
+    cleanup?.()
+    s.unsubscribe()
+  }
 }

@@ -1,36 +1,20 @@
-import assert from 'assert'
-import { ParticleContainer, Sprite, Texture } from 'pixi.js'
 import { splitEvery } from 'ramda'
 import { randomInt } from '../helpers/random'
+import { Particle, ParticleContainer } from '../Particle'
 import { aspect } from './render'
 
-const canvas = new OffscreenCanvas(
-  1,
-  1,
-) as unknown as HTMLCanvasElement
-const ctx = canvas.getContext('2d')
-assert(ctx)
-ctx.fillStyle = '#FFF'
-ctx.fillRect(0, 0, 1, 1)
-
-const WhiteTexture = Texture.from(canvas)
 const [width, height] = aspect
-const n = (width * width) / 4
+const n = 100000
 console.info('Rendering', n, 'particles')
 
-export const makeParticle = () => {
-  const p = Sprite.from(WhiteTexture)
-  p.x = randomInt(1, width)
-  p.y = randomInt(1, height)
+export const stage = new ParticleContainer(n)
+export const particles = Array.from({ length: n }, () => {
+  const p = new Particle(
+    randomInt(1, width),
+    randomInt(1, height),
+  )
 
   return p
-}
+})
 
-export const particles = new Array(n)
-  .fill(undefined)
-  .map(makeParticle)
-
-export const stage = new ParticleContainer(n)
-for (const p of splitEvery(n / 100, particles)) {
-  stage.addChild(...p)
-}
+for (const p of splitEvery(100, particles)) stage.addChild(...p)

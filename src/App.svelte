@@ -5,16 +5,19 @@
   import { renderer } from './canvas/render'
   import { useObservable } from './helpers/useObservable'
   import { onDestroy } from 'svelte'
+  import { update } from './Particle'
 
   let view: HTMLCanvasElement
 
-  const unsub = useObservable(animationFrames()).subscribe(
-    () => {
-      const { render } = renderer(view)
+  const unsub = useObservable(animationFrames(), () => {
+    const { render, renderer: r } = renderer(view)
 
-      render(stage)
-    },
-  )
+    for (const p of stage.children) update(p)
+
+    render(stage)
+
+    return () => r.destroy()
+  })
 
   onDestroy(unsub)
 </script>

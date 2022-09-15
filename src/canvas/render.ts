@@ -1,10 +1,9 @@
 import { Renderer } from 'pixi.js'
 
-const w = window.innerWidth
-const h = window.innerHeight
+export const resolution = 1
 
-const width = Math.min(window.innerWidth, 500)
-const height = Math.round((h * width) / w)
+const width = window.innerWidth / resolution
+const height = window.innerHeight / resolution
 
 export const aspect = [width, height] as const
 
@@ -17,6 +16,7 @@ export const renderer = (view: HTMLCanvasElement) => {
     powerPreference: 'high-performance',
     useContextAlpha: false,
     antialias: false,
+    resolution,
   })
 
   return { renderer: r, render: r.render.bind(r) }
