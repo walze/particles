@@ -21,39 +21,43 @@ ctx.fillRect(0, 0, 1, 1)
 const WhiteTexture = Texture.from(canvas)
 
 const G = 6.6743015e-11
-const mass = 7.34767309e11
-const gravity = (b1: [number, number], b2: [number, number]) => {
-  const [x1, y1] = b1
-  const [x2, y2] = b2
+const mass = 7.34767309e13
+const gravity = (c1: [number, number], c2: [number, number]) => {
+  const [x1, y1] = c1
+  const [x2, y2] = c2
 
   const dx = x2 - x1
   const dy = y2 - y1
 
   const d = Math.sqrt(dx ** 2 + dy ** 2)
 
-  const g = G * (mass / d ** 2)
+  const a = (G * mass) / d ** 2
 
-  const ax = g * dx
-  const ay = g * dy
+  const ux = dx / d
+  const uy = dy / d
+
+  const ax = ux * a
+  const ay = uy * a
 
   return [ax, ay, [dx, dy]] as [number, number, [number, number]]
 }
 
 const center = [width / 2, height / 2] as [number, number]
 
-export const update = (p: Particle) => {
+export const update = (p: Particle, dt: number) => {
+  const t = dt / 16
+
   const [nvx, nvy, dv] = gravity(p.coords, center)
-  p.vs = [p.vx + nvx, p.vy + nvy]
+  p.vs = [p.vx + nvx / t, p.vy + nvy / t]
 
   const d = Math.sqrt(dv[0] ** 2 + dv[1] ** 2)
-  const isClose = d <= 100
 
   // if (p.x + p.vx <= 0 || p.x + p.vx >= width) p.vx *= -1
   // if (p.y + p.vy <= 0 || p.y + p.vy >= height) p.vy *= -1
 
-  if (isClose) {
-    p.vx *= -0.95
-    p.vy *= -0.5
+  if (d <= 100) {
+    p.vx *= -0.666
+    p.vy *= -0.6
   }
 
   p.x += p.vx
