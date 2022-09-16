@@ -4,7 +4,7 @@ import { aspect } from '../config'
 import { splitEvery } from 'ramda'
 
 const [width, height] = aspect
-const n = 250_000
+const n = 200_000
 console.info('Rendering', n, 'particles')
 
 const r = (d: number) => randomInt(1, d)
