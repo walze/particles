@@ -21,7 +21,8 @@ ctx.fillRect(0, 0, 1, 1)
 const WhiteTexture = Texture.from(canvas)
 
 const G = 6.6743015e-11
-const mass = 7.34767309e13
+let mass = 7.34767309e13
+
 const gravity = (c1: [number, number], c2: [number, number]) => {
   const [x1, y1] = c1
   const [x2, y2] = c2
@@ -39,6 +40,8 @@ const gravity = (c1: [number, number], c2: [number, number]) => {
   const ax = ux * a
   const ay = uy * a
 
+  mass *= 1 + G
+
   return [ax, ay, [dx, dy]] as [number, number, [number, number]]
 }
 
@@ -51,6 +54,8 @@ export const update = (p: Particle) => {
 
   const close = Math.sqrt(dv[0] ** 2 + dv[1] ** 2) <= 50
   if (close) {
+    mass *= 1.000001
+
     p.vx = 0
     p.vy = 0
     p.position.set(-100000, -100000)
