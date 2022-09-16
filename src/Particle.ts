@@ -40,7 +40,7 @@ const gravity = (c1: [number, number], c2: [number, number]) => {
   const ax = ux * a
   const ay = uy * a
 
-  mass *= 1 + G
+  mass *= 1 + G * 10
 
   return [ax, ay, [dx, dy]] as [number, number, [number, number]]
 }
@@ -54,7 +54,7 @@ export const update = (p: Particle) => {
 
   const close = Math.sqrt(dv[0] ** 2 + dv[1] ** 2) <= 50
   if (close) {
-    mass *= 1.000001
+    mass *= 1 + Math.sqrt(G) / 2
 
     p.vx = 0
     p.vy = 0
