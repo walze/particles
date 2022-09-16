@@ -10,10 +10,10 @@ console.info('Rendering', n, 'particles')
 const r = (d: number) => randomInt(1, d)
 
 export const stage = new ParticleContainer(n)
-export const particles = Array.from({ length: n }, () => {
-  const p = new Particle(r(width), r(height))
+export const particles = Array.from(
+  { length: n },
+  () => new Particle(r(width), r(height)),
+)
 
-  return p
-})
-
-for (const p of splitEvery(100, particles)) stage.addChild(...p)
+for (const p of splitEvery(100, particles))
+  setTimeout(() => stage.addChild(...p), 0)
