@@ -1,26 +1,28 @@
 <script lang="ts">
+  import { animationFrames } from 'rxjs'
+
   import { stage } from './canvas/particles'
-  import { renderer } from './canvas/render'
+  import { renderer as getRenderer } from './canvas/render'
+  import { useObservable } from './helpers/useObservable'
+  import { onDestroy, onMount } from 'svelte'
   import { update } from './Particle'
-  import { onDestroy } from 'svelte'
 
   let view: HTMLCanvasElement
+  let unsub = () => {}
 
-  const f = () => {
-    const { render } = renderer(view)
+  onMount(() => {
+    const { render, renderer: r } = getRenderer(view)
 
-    for (const p of stage.children) update(p)
+    unsub = useObservable(animationFrames(), () => {
+      for (const p of stage.children) update(p)
 
-    render(stage)
+      render(stage)
 
-    requestAnimationFrame(f)
-  }
-
-  const id = requestAnimationFrame(f)
-
-  onDestroy(() => {
-    cancelAnimationFrame(id)
+      return () => r.destroy()
+    })
   })
+
+  onDestroy(unsub)
 </script>
 
 <canvas

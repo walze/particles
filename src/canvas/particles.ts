@@ -4,7 +4,7 @@ import { Particle, ParticleContainer } from '../Particle'
 import { aspect } from './render'
 
 const [width, height] = aspect
-const n = 88888
+const n = 80_000
 console.info('Rendering', n, 'particles')
 
 export const stage = new ParticleContainer(n)
