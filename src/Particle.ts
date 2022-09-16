@@ -1,10 +1,10 @@
-import assert from 'assert'
 import {
   Sprite,
   ParticleContainer as PC,
   Texture,
 } from 'pixi.js'
 import { aspect } from './config'
+import assert from './helpers/assert'
 
 const [width, height] = aspect
 
