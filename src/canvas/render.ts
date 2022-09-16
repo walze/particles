@@ -1,13 +1,30 @@
-import { Renderer } from 'pixi.js'
-import { update } from '../Particle'
+import { ParticleRenderer, Renderer, Ticker } from 'pixi.js'
+import { type Particle, update as pUpdate } from '../Particle'
 import { stage } from './particles'
 
 import { aspect, resolution } from '../config'
 
 const [width, height] = aspect
 
-export const renderer = (view: HTMLCanvasElement) => {
-  const r = new Renderer({
+const isInBounds = ({ x, y }: { x: number; y: number }) =>
+  x > -1000 || x < width + 1000 || y > -1000 || y < height + 1000
+
+const n = stage.children.length
+const update = () => {
+  for (let i = 0; i < n; i++) {
+    const p = stage.children[i] as Particle
+
+    if (isInBounds(p)) pUpdate(p)
+  }
+}
+
+Ticker.system.autoStart = false
+
+export const ticker = new Ticker()
+ticker.add(update)
+
+export const getRenderer = (view: HTMLCanvasElement) => {
+  const renderer = new Renderer({
     view,
     width,
     height,
@@ -18,13 +35,25 @@ export const renderer = (view: HTMLCanvasElement) => {
     resolution,
   })
 
-  const frame = () => {
-    for (const p of stage.children) update(p)
+  const pr = new ParticleRenderer(renderer)
+  const render = pr.render.bind(pr, stage)
+  render()
 
-    r.render(stage)
+  ticker.add(render)
 
-    return () => r.destroy()
+  return {
+    renderer,
+    frame: update,
+    destroy: () => {
+      ticker.remove(update)
+      ticker.remove(render)
+      pr.destroy()
+      renderer.destroy()
+      stage.destroy({
+        children: true,
+      })
+    },
   }
-
-  return { renderer: r, render: r.render.bind(r), frame }
 }
+
+export default getRenderer

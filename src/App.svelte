@@ -1,21 +1,20 @@
 <script lang="ts">
-  import { animationFrames } from 'rxjs'
-
-  import { renderer } from './canvas/render'
-  import { useObservable } from './helpers/useObservable'
+  import getRenderer, { ticker } from './canvas/render'
   import { onDestroy, onMount } from 'svelte'
 
   let view: HTMLCanvasElement
-  let unsub = () => {}
+  let renderer: ReturnType<typeof getRenderer> | undefined
 
   onMount(() => {
-    const { frame } = renderer(view)
-
-    unsub = useObservable(animationFrames(), frame)
+    renderer = getRenderer(view)
   })
 
-  onDestroy(unsub)
+  onDestroy(() => {
+    renderer?.destroy()
+  })
 </script>
+
+<svelte:window on:load={() => ticker.start()} />
 
 <canvas
   width={window.innerWidth}

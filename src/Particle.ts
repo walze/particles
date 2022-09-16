@@ -46,54 +46,34 @@ const center = [width / 2, height / 2] as [number, number]
 
 export const update = (p: Particle) => {
   const [nvx, nvy, dv] = gravity(p.coords, center)
-  p.vs = [p.vx + nvx, p.vy + nvy]
+  p.vx += nvx
+  p.vy += nvy
 
-  const d = Math.sqrt(dv[0] ** 2 + dv[1] ** 2)
-
-  // if (p.x + p.vx <= 0 || p.x + p.vx >= width) p.vx *= -1
-  // if (p.y + p.vy <= 0 || p.y + p.vy >= height) p.vy *= -1
-
-  if (d <= 100) {
-    p.parent?.removeChild(p)
-    return p.destroy()
+  const close = Math.sqrt(dv[0] ** 2 + dv[1] ** 2) <= 50
+  if (close) {
+    p.vx = 0
+    p.vy = 0
+    p.position.set(-100000, -100000)
   }
 
-  p.x += p.vx
-  p.y += p.vy
+  p.position.set(p.x + p.vx, p.y + p.vy)
 }
 
-// i hate this
 export class Particle extends Sprite {
-  vs: [vx: number, vy: number]
+  vx = -1
+  vy = -1
 
-  get vx() {
-    return this.vs[0]
-  }
-
-  set vx(vx: number) {
-    this.vs[0] = vx
-  }
-
-  get vy() {
-    return this.vs[1]
-  }
-
-  set vy(vy: number) {
-    this.vs[1] = vy
-  }
+  override name = `${this.x}${this.y}`
 
   get coords() {
     return [this.x, this.y] as [number, number]
   }
-
-  override name = `${this.x}${this.y}`
 
   constructor(x: number, y: number) {
     super(WhiteTexture)
 
     this.x = x
     this.y = y
-    this.vs = [1, 1]
   }
 }
 
