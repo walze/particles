@@ -18,8 +18,8 @@ export const renderer = (view: HTMLCanvasElement) => {
     resolution,
   })
 
-  const frame = () => {
-    for (const p of stage.children) update(p)
+  const frame = (t: number) => {
+    for (const p of stage.children) update(p, t)
 
     r.render(stage)
 

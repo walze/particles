@@ -11,7 +11,11 @@
   onMount(() => {
     const { frame } = renderer(view)
 
-    unsub = useObservable(animationFrames(), frame)
+    unsub = useObservable(animationFrames(), (p) => {
+      if (!p) return
+
+      frame(p.timestamp)
+    })
   })
 
   onDestroy(unsub)
