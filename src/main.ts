@@ -1,9 +1,12 @@
-import App from './App.svelte'
-import assert from 'assert'
+import { renderer, ticker, render } from './canvas/app'
+import { createParticles } from './canvas/particles'
 
-const target = document.querySelector('#app')
-assert(target, 'No #app element found')
+const { body } = document
 
-const app = new App({ target })
+const { view } = renderer
+createParticles()
+render()
 
-export default app
+body.appendChild(view)
+
+window.onload = () => ticker.start()

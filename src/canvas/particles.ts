@@ -1,24 +1,21 @@
 import { randomInt } from '../helpers/random'
-import { Particle, ParticleContainer } from '../Particle'
+import { Particle, ParticleContainer, update } from '../Particle'
 import { aspect } from '../config'
-import { splitEvery } from 'ramda'
 
 const [width, height] = aspect
-const n = 200_000
-console.info('Rendering', n, 'particles')
+export const PARTICLE_NUMBER = 200_000
+console.info('Rendering', PARTICLE_NUMBER, 'particles')
+
+export const stage = new ParticleContainer(PARTICLE_NUMBER)
 
 const r = (d: number) => randomInt(1, d)
 
-export const stage = new ParticleContainer(n)
-export const particles = Array.from(
-  { length: n },
-  () => new Particle(r(width), r(height)),
-)
+export const createParticles = () => {
+  for (let i = 0; i < PARTICLE_NUMBER; i++) {
+    const p = new Particle(r(width), r(height))
 
-const split = splitEvery(100, particles)
+    update(p)
 
-for (let i = 0; i < split.length; i++) {
-  const p = split[i]
-
-  p && stage.addChild(...p)
+    stage.addChild(p)
+  }
 }
