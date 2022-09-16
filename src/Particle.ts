@@ -4,7 +4,7 @@ import {
   ParticleContainer as PC,
   Texture,
 } from 'pixi.js'
-import { aspect } from './canvas/render'
+import { aspect } from './config'
 
 const [width, height] = aspect
 

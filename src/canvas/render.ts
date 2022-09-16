@@ -1,11 +1,10 @@
 import { Renderer } from 'pixi.js'
+import { update } from '../Particle'
+import { stage } from './particles'
 
-export const resolution = 1
+import { aspect, resolution } from '../config'
 
-const width = window.innerWidth / resolution
-const height = window.innerHeight / resolution
-
-export const aspect = [width, height] as const
+const [width, height] = aspect
 
 export const renderer = (view: HTMLCanvasElement) => {
   const r = new Renderer({
@@ -19,5 +18,13 @@ export const renderer = (view: HTMLCanvasElement) => {
     resolution,
   })
 
-  return { renderer: r, render: r.render.bind(r) }
+  const frame = () => {
+    for (const p of stage.children) update(p)
+
+    r.render(stage)
+
+    return () => r.destroy()
+  }
+
+  return { renderer: r, render: r.render.bind(r), frame }
 }

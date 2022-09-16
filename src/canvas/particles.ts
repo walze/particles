@@ -1,7 +1,7 @@
 import { splitEvery } from 'ramda'
 import { randomInt } from '../helpers/random'
 import { Particle, ParticleContainer } from '../Particle'
-import { aspect } from './render'
+import { aspect } from '../config'
 
 const [width, height] = aspect
 const n = 80_000
