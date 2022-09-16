@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --outDir docs --assetsDir . --base ./ --target esnext",
+    "build": "vite build --base ./",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
