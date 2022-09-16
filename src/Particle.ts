@@ -44,11 +44,9 @@ const gravity = (c1: [number, number], c2: [number, number]) => {
 
 const center = [width / 2, height / 2] as [number, number]
 
-export const update = (p: Particle, dt: number) => {
-  const t = dt / 16
-
+export const update = (p: Particle) => {
   const [nvx, nvy, dv] = gravity(p.coords, center)
-  p.vs = [p.vx + nvx / t, p.vy + nvy / t]
+  p.vs = [p.vx + nvx, p.vy + nvy]
 
   const d = Math.sqrt(dv[0] ** 2 + dv[1] ** 2)
 
@@ -56,8 +54,8 @@ export const update = (p: Particle, dt: number) => {
   // if (p.y + p.vy <= 0 || p.y + p.vy >= height) p.vy *= -1
 
   if (d <= 100) {
-    p.vx *= -0.666
-    p.vy *= -0.6
+    p.parent?.removeChild(p)
+    return p.destroy()
   }
 
   p.x += p.vx
@@ -66,10 +64,7 @@ export const update = (p: Particle, dt: number) => {
 
 // i hate this
 export class Particle extends Sprite {
-  vs: [vx: number, vy: number] = [
-    Math.random() * 2,
-    Math.random() * 2,
-  ]
+  vs: [vx: number, vy: number]
 
   get vx() {
     return this.vs[0]
@@ -98,6 +93,7 @@ export class Particle extends Sprite {
 
     this.x = x
     this.y = y
+    this.vs = [1, 1]
   }
 }
 

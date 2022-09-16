@@ -4,15 +4,14 @@ import { Particle, ParticleContainer } from '../Particle'
 import { aspect } from '../config'
 
 const [width, height] = aspect
-const n = 80_000
+const n = 100_000
 console.info('Rendering', n, 'particles')
+
+const r = (d: number) => randomInt(1, d)
 
 export const stage = new ParticleContainer(n)
 export const particles = Array.from({ length: n }, () => {
-  const p = new Particle(
-    randomInt(1, width),
-    randomInt(1, height),
-  )
+  const p = new Particle(r(width), r(height))
 
   return p
 })
