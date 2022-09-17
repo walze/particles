@@ -1,5 +1,4 @@
 import { ParticleRenderer, Renderer, Ticker } from 'pixi.js'
-import { type Particle, update as pUpdate } from '../Particle'
 import { PARTICLE_NUMBER, stage } from './particles'
 
 import { aspect, resolution } from '../config'
@@ -7,14 +6,11 @@ import { aspect, resolution } from '../config'
 const [width, height] = aspect
 
 export const isInBounds = ({ x, y }: { x: number; y: number }) =>
-  x > -1000 || x < width + 1000 || y > -1000 || y < height + 1000
+  x > 0 && x < width && y > 0 && y < height
 
 export const update = () => {
-  for (let i = 0; i < PARTICLE_NUMBER; i++) {
-    const p = stage.children[i] as Particle
-
-    if (isInBounds(p)) pUpdate(p)
-  }
+  for (let i = 0; i < PARTICLE_NUMBER; i++)
+    stage.children[i]?.update()
 }
 
 Ticker.system.autoStart = false

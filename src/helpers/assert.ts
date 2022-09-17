@@ -1,6 +1,6 @@
 class AssertionError extends Error {
-  constructor(value: unknown, message?: string) {
-    super(message, {
+  constructor(value: unknown, message?: unknown) {
+    super(JSON.stringify(message), {
       cause: value,
     })
 
@@ -11,7 +11,7 @@ class AssertionError extends Error {
   }
 }
 
-type Assert = <T>(value: T, message?: string) => asserts value
+type Assert = <T>(value: T, message?: unknown) => asserts value
 
 const assert: Assert = (value, text) => {
   if (!value) throw new AssertionError(value, text)

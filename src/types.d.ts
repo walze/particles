@@ -2,6 +2,8 @@ import 'svelte'
 import 'vite/client'
 
 declare global {
+  export type Vector = readonly [x: number, y: number]
+
   export interface Window {
     loop: {
       elapsed: number
@@ -12,7 +14,5 @@ declare global {
 }
 
 declare module '*.svelte' {
-  import { SvelteComponentTyped } from 'svelte'
-
-  export default class extends SvelteComponentTyped {}
+  export { SvelteComponentTyped } from 'svelte'
 }
