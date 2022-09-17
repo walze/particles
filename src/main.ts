@@ -1,4 +1,4 @@
-import { renderer, ticker, render } from './canvas/app'
+import { renderer, render, start } from './canvas/app'
 import { createParticles } from './canvas/particles'
 
 const { body } = document
@@ -9,4 +9,4 @@ render()
 
 body.appendChild(view)
 
-window.onload = () => ticker.start()
+window.onload = start.bind(null, 0)

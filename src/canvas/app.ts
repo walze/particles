@@ -6,10 +6,10 @@ import { aspect, resolution } from '../config'
 
 const [width, height] = aspect
 
-const isInBounds = ({ x, y }: { x: number; y: number }) =>
+export const isInBounds = ({ x, y }: { x: number; y: number }) =>
   x > -1000 || x < width + 1000 || y > -1000 || y < height + 1000
 
-const update = () => {
+export const update = () => {
   for (let i = 0; i < PARTICLE_NUMBER; i++) {
     const p = stage.children[i] as Particle
 
@@ -19,9 +19,7 @@ const update = () => {
 
 Ticker.system.autoStart = false
 
-export const ticker = new Ticker()
-
-const renderer = new Renderer({
+export const renderer = new Renderer({
   width,
   height,
   backgroundColor: 0x111111,
@@ -31,20 +29,24 @@ const renderer = new Renderer({
   resolution,
 })
 
-const pr = new ParticleRenderer(renderer)
-const render = pr.render.bind(pr, stage)
+export const pr = new ParticleRenderer(renderer)
+export const render = pr.render.bind(pr, stage)
 
-ticker.add(update)
-ticker.add(render)
+export const start = () => {
+  // window.loop.delta = t - window.loop.previous
+  // window.loop.previous = t
+  // window.loop.elapsed = t
 
-const destroy = () => {
-  ticker.remove(update)
-  ticker.remove(render)
+  update()
+  render()
+
+  requestAnimationFrame(start)
+}
+
+export const destroy = () => {
   pr.destroy()
   renderer.destroy()
   stage.destroy({
-    children: false,
+    children: true,
   })
 }
-
-export { renderer, update, destroy, render }
