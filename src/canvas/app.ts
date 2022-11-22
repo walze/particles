@@ -10,35 +10,30 @@ export const isInBounds = ({ x, y }: { x: number; y: number }) =>
   x > -1000 || x < width + 1000 || y > -1000 || y < height + 1000
 
 export const update = () => {
-  for (let i = 0; i < PARTICLE_NUMBER; i++) {
-    const p = stage.children[i] as Particle
-
-    if (isInBounds(p)) pUpdate(p)
-  }
+  for (let i = 0; i < PARTICLE_NUMBER; i++)
+    pUpdate(stage.children[i] as Particle)
 }
 
 Ticker.system.autoStart = false
 
+const view = document.createElement('canvas')
+document.body.appendChild(view)
+
 export const renderer = new Renderer({
   width,
   height,
-  backgroundColor: 0x111111,
   powerPreference: 'high-performance',
-  useContextAlpha: false,
+  premultipliedAlpha: false,
   antialias: false,
-  resolution,
+  // resolution,
+  view,
 })
 
 export const pr = new ParticleRenderer(renderer)
-export const render = pr.render.bind(pr, stage)
 
 export const start = () => {
-  // window.loop.delta = t - window.loop.previous
-  // window.loop.previous = t
-  // window.loop.elapsed = t
-
   update()
-  render()
+  pr.render(stage)
 
   requestAnimationFrame(start)
 }

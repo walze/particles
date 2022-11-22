@@ -34,26 +34,20 @@ const gravity = (c1: [number, number], c2: [number, number]) => {
 
   const a = (G * mass) / d ** 2
 
-  const ux = dx / d
-  const uy = dy / d
-
-  const ax = ux * a
-  const ay = uy * a
+  const ax = (dx / d) * a
+  const ay = (dy / d) * a
 
   mass *= 1 + G * 10
 
-  return [ax, ay, [dx, dy]] as [number, number, [number, number]]
+  return { ax, ay, dx, dy }
 }
 
 const center = [width / 2, height / 2] as [number, number]
 
 export const update = (p: Particle) => {
-  const [nvx, nvy, dv] = gravity(p.coords, center)
-  p.vx += nvx
-  p.vy += nvy
+  const { ax, ay, dx, dy } = gravity(p.coords, center)
 
-  const close = Math.sqrt(dv[0] ** 2 + dv[1] ** 2) <= 50
-  if (close) {
+  if (Math.sqrt(dx ** 2 + dy ** 2) <= 50) {
     mass *= 1 + Math.sqrt(G) / 2
 
     p.vx = 0
@@ -61,6 +55,8 @@ export const update = (p: Particle) => {
     p.position.set(-100000, -100000)
   }
 
+  p.vx += ax
+  p.vy += ay
   p.position.set(p.x + p.vx, p.y + p.vy)
 }
 
@@ -69,6 +65,7 @@ export class Particle extends Sprite {
   vy = -1
 
   override name = `${this.x}${this.y}`
+  override interactive = false
 
   get coords() {
     return [this.x, this.y] as [number, number]
